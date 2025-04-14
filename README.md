@@ -1,5 +1,7 @@
 # Tenant Power
 
+⛔️ DEPRECATED ⛔️ (2025-04-14)
+
 ## Set up for development
 
 - After cloning this repo to your computer, run `npm install`.
