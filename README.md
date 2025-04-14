@@ -1,6 +1,6 @@
 # Tenant Power
 
-⛔️ DEPRECATED ⛔️ (2025-04-14)
+⛔️ DEPRECATED ⛔️ (2025-04-14) Superceded by development on [who-owns-mass-frontend](https://github.com/mit-spatial-action/who-owns-mass-frontend) from [@mit-spatial-action](https://github.com/mit-spatial-action).
 
 ## Set up for development
 
