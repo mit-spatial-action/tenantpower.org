@@ -28,8 +28,10 @@
   "dependencies": {
     "@fontsource-variable/overpass": "^5.2.8",
     "@fontsource-variable/overpass-mono": "^5.2.8",
+    "@mapbox/mapbox-gl-geocoder": "^5.1.2",
     "@turf/bbox": "^7.3.1",
     "@turf/centroid": "^7.3.1",
+    "bootstrap": "^5.3.8",
     "ejs": "^3.1.10",
     "express": "^5.2.1",
     "mapbox-gl": "^3.17.0",

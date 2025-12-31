@@ -4,7 +4,7 @@
 }
 
 html, body {
-  font-family: sans-serif;
+  font-family: 'Overpass Variable', sans-serif;
   margin: auto;
 }
 
@@ -64,23 +64,19 @@ html, body {
 }
 
 .modal {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 500;
 }
 
 #closest .address {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 700;
 }
 
 .modal-title {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 700;
   color:red;
 }
 
 #closest .city {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 500;
 }
 
@@ -92,13 +88,8 @@ html, body {
 }
 
 .btn.btn-secondary {
-  margin-top: 1rem;
-  padding: 0.5rem;
-  color: white;
-  background-color: rgba(255,0,0,0.7);
-  border-radius: 0 !important;
-  border-style: none !important;
-  width:100%
+  background-color: red;
+  border-style: none;
 }
 
 .btn-toolbar button {
@@ -138,49 +129,12 @@ html, body {
   color: white;
 }
 
-.modal-content {
-  background-color: transparent;
-}
-
 .modal-body {
   color: white;
-  background-color: rgba(255,0,0,0.7);
-  border-radius: 0;
-  border-width: 0;
+  background-color: rgba(255,0,0,1);
 }
 
-.modal-header {
-  background-color: white;
-  border-radius: 0;
-  border-width: 0;
-}
-
-.modal-footer {
-  border-radius: 0;
-  border-width: 0;
-}
-
-.modal-content {
-  border-radius: 0;
-  border-width: 0;
-
-}
-
-.modal a:link {
-  color: white;
-}
-
-.modal a:visited {
-  color: white;
-}
-
-
-.modal a:hover {
-  color: white;
-  font-weight: 500;
-}
-
-.modal a:active {
+.modal a:link, a:visited, a:active {
   color: white;
 }
 
@@ -205,7 +159,6 @@ html, body {
 #page-title {
   position: absolute;
   top:0;
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 800;
   color: white;
   text-align: center;
@@ -260,27 +213,22 @@ html, body {
 }
 
 #ll-info .ll-name {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 700;
 }
 
 #ll-info .ll-body {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 400;
 }
 
 .address {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 700;
 }
 
 #ll-props .city {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 500;
 }
 
 #ll-props .body {
-  font-family: 'Overpass Variable', sans-serif;
   font-weight: 400;
 }
 
@@ -301,7 +249,6 @@ html, body {
 }
 
 .mapboxgl-ctrl-geocoder {
-  font-family: 'Overpass Variable', sans-serif;
   width: 100%;
   border-radius: 0;
 }

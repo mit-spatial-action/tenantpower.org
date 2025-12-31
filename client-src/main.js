@@ -1,13 +1,20 @@
-import './styles.css'; 
-
 import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css'; 
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
-import 'mapbox-gl/dist/mapbox-gl.css'; 
+import * as bootstrap from 'bootstrap'; 
+import 'bootstrap/dist/css/bootstrap.css';
 import '@fontsource-variable/overpass';
 import '@fontsource-variable/overpass-mono';
+import './styles.css'; 
 
-$('#disclaimer').modal('show');
+const disclaimer = new bootstrap.Modal(document.getElementById('disclaimer'));
+const about = new bootstrap.Modal(document.getElementById('about'));
+
+disclaimer.show();
+about.hide();
 
 mapboxgl.accessToken = "pk.eyJ1IjoiZXJpY3JvYnNreWh1bnRsZXkiLCJhIjoiY2tiOGY2YzA3MDNvZDJydWZtanF1NGlvMSJ9.eZomWOA0vV9CM3Uz8OmQVg"
 
@@ -344,7 +351,7 @@ listProperties = (cluster) => {
         this.classList.remove('active');
     })
     buttonInfo.addEventListener('click', function () {
-        $('#about').modal('show');
+        about.show();
     })
     cluster.forEach(function (prop) {
         let p = prop.properties;
