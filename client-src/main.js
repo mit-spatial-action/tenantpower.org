@@ -1,4 +1,15 @@
+import './styles.css'; 
+
+import mapboxgl from 'mapbox-gl';
+import bbox from '@turf/bbox';
+import centroid from '@turf/centroid';
+import 'mapbox-gl/dist/mapbox-gl.css'; 
+import '@fontsource-variable/overpass';
+import '@fontsource-variable/overpass-mono';
+
 $('#disclaimer').modal('show');
+
+mapboxgl.accessToken = "pk.eyJ1IjoiZXJpY3JvYnNreWh1bnRsZXkiLCJhIjoiY2tiOGY2YzA3MDNvZDJydWZtanF1NGlvMSJ9.eZomWOA0vV9CM3Uz8OmQVg"
 
 const map = new mapboxgl.Map({
     container: 'map',
@@ -405,14 +416,14 @@ addPoints = async (url) => {
         } else {
             listResults(geojson.features);
         }
-        let bbox = turf.extent(geojson);
+        let extent = bbox(geojson);
         let centroids = {
             type: 'FeatureCollection',
             features: geojson.features.map(function(feat) {
                 return {
                     type: 'Feature',
                     properties: feat.properties,
-                    geometry: turf.centroid(feat).geometry
+                    geometry: centroid(feat).geometry
                 }
             })
         };
@@ -565,7 +576,7 @@ addPoints = async (url) => {
                 speed: 0.9,
             })
         });
-        map.fitBounds(bbox, { maxZoom: 17 });
+        map.fitBounds(extent, { maxZoom: 17 });
     }
 }
 

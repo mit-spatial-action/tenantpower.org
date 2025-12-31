@@ -13,7 +13,7 @@ const PORT = process.env.APP_PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.set('views', path.join(__dirname, 'public/views'));
+app.set('views', path.join(__dirname, 'client-src'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 
