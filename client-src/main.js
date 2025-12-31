@@ -39,7 +39,7 @@ document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 const clstUrl = 'props/clst';
 const xyUrl = 'props/xy';
 
-getResults = async (url) => {
+const getResults = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
     return data;
@@ -50,11 +50,7 @@ let activeProperty = null;
 let currentClst = null;
 let resultState = false;
 
-titleCase = (string) => {
-    return (string.split(' ').map(w => w[0].toUpperCase() + w.substr(1).toLowerCase()).join(' '))
-}
-
-cityName = (abb) => {
+const cityName = (abb) => {
     if (abb == 'som') {
         return ('Somerville, MA');
     } else if (abb == 'cam') {
@@ -68,7 +64,7 @@ cityName = (abb) => {
     }
 }
 
-makeArrowMarker = (p) => {
+const makeArrowMarker = (p) => {
     let latlng = new mapboxgl.LngLat(p.lon, p.lat);
     let el = document.createElement('div');
     el.className = 'marker';
@@ -82,7 +78,7 @@ makeArrowMarker = (p) => {
     currentMarker = new mapboxgl.Marker(el).setLngLat(latlng).addTo(map);
 }
 
-csvFromJSON = (json) => {
+const csvFromJSON = (json) => {
     // null value handler
     const replacer = (key, value) => value === null ? '' : value;
     const header = Object.keys(json[0].properties);
@@ -92,7 +88,7 @@ csvFromJSON = (json) => {
     return csv
 }
 
-listResults = (features) => {
+const listResults = (features) => {
     // let property = document.getElementById('search-results');
     // while (property.firstChild) {
     //     property.removeChild(property.firstChild);
@@ -262,7 +258,7 @@ listResults = (features) => {
     }
 }
 
-listProperties = (cluster) => {
+const listProperties = (cluster) => {
     let first = cluster[0];
     let props = first.properties;
     let ls = document.getElementById('left-sidebar');
@@ -415,7 +411,7 @@ listProperties = (cluster) => {
     })
 }
 
-addPoints = async (url) => {
+const addPoints = async (url) => {
     let geojson = await getResults(url);
     if (geojson.features) {
         if (currentClst) {
@@ -523,7 +519,7 @@ addPoints = async (url) => {
 
         map.on('mouseenter', 'prop-polys', function (e) {
             map.getCanvas().style.cursor = 'pointer';
-            p = e.features[0].properties;
+            let p = e.features[0].properties;
             if (currentMarker) {
                 currentMarker.remove();
             }
@@ -554,7 +550,7 @@ addPoints = async (url) => {
         });
         map.on('mouseenter', 'prop-circle', function (e) {
             map.getCanvas().style.cursor = 'pointer';
-            p = e.features[0].properties;
+            let p = e.features[0].properties;
             if (currentMarker) {
                 currentMarker.remove();
             }
