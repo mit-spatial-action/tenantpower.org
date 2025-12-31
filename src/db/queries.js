@@ -1,25 +1,23 @@
-import fs from 'fs';
 import path from 'path';
 import pg from 'pg';
 import { fileURLToPath } from 'url';
+import { loadEnvFile } from 'process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const creds_path = path.join(__dirname, 'database.json');
-const creds = JSON.parse(fs.readFileSync(creds_path, 'utf8'));
+loadEnvFile()
 
 pg.defaults.ssl = true;
 
 const { Pool } = pg;
 
 const pool = new Pool({
-    user: creds.dev.user,
-    host: creds.dev.host,
-    database: creds.dev.database,
-    password: creds.dev.password,
-    port: creds.dev.port,
-    ssl: creds.dev.ssl
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DB,
+    password: process.env.PG_PASS,
+    port: process.env.PG_PORT,
 })
 
 const getPropsByClst = (request, response) => {
