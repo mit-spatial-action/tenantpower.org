@@ -1,6 +1,5 @@
 const path = require('path')
 const express = require('express')
-const vue = require('vue')
 const http = require('http')
 const https = require('https')
 const app = express()

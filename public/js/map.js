@@ -570,37 +570,37 @@ addPoints = async (url) => {
 }
 
 map.on('load', () => {
-    map.addSource('prop-tiles', {
-        type: 'vector',
-        url: 'mapbox://ericrobskyhuntley.904c4kq4'
-    });
-    map.addLayer({
-        'id': 'prop-backdrop',
-        'type': 'circle',
-        'source': 'prop-tiles',
-        'source-layer': 'test-90w35b',
-        'layout': {
-            'circle-sort-key': ['get', 'count']
-        },
-        'paint': {
-            'circle-color': 'white',
-            'circle-blur': 1,
-            'circle-opacity': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                13, 0.3,
-                14, 0.1
-            ],
-            'circle-radius': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                13, 2,
-                22, 20
-            ]
-        }
-    });
+    // map.addSource('prop-tiles', {
+    //     type: 'vector',
+    //     url: 'mapbox://ericrobskyhuntley.904c4kq4'
+    // });
+    // map.addLayer({
+    //     'id': 'prop-backdrop',
+    //     'type': 'circle',
+    //     'source': 'prop-tiles',
+    //     'source-layer': 'test-90w35b',
+    //     'layout': {
+    //         'circle-sort-key': ['get', 'count']
+    //     },
+    //     'paint': {
+    //         'circle-color': 'white',
+    //         'circle-blur': 1,
+    //         'circle-opacity': [
+    //             'interpolate',
+    //             ['linear'],
+    //             ['zoom'],
+    //             13, 0.3,
+    //             14, 0.1
+    //         ],
+    //         'circle-radius': [
+    //             'interpolate',
+    //             ['linear'],
+    //             ['zoom'],
+    //             13, 2,
+    //             22, 20
+    //         ]
+    //     }
+    // });
     geocoder.on('result', function (e) {
         let ls = document.getElementById('left-sidebar');
         ls.style.display = 'block';
@@ -656,48 +656,48 @@ map.on('load', () => {
         }
     });
 
-    map.on('mouseover', 'prop-backdrop', function (e) {
-        map.getCanvas().style.cursor = 'pointer';
-    });
-    map.on('mouseleave', 'prop-backdrop', function () {
-        map.getCanvas().style.cursor = '';
-    });
+    // map.on('mouseover', 'prop-backdrop', function (e) {
+    //     map.getCanvas().style.cursor = 'pointer';
+    // });
+    // map.on('mouseleave', 'prop-backdrop', function () {
+    //     map.getCanvas().style.cursor = '';
+    // });
 
-    map.on('click', 'prop-backdrop', (e) => {
-        let coordinates = e.lngLat;
-        let description = "<u id='here' class='data'>What's here?</u>";
-        let popup = new mapboxgl.Popup()
-            .setLngLat(coordinates)
-            .setHTML(description)
-            .addTo(map);
-        let here = document.getElementById('here');
-        here.addEventListener('click', function () {
-            if (currentMarker) {
-                currentMarker.remove();
-            }
-            const qUrl = `${xyUrl}/${coordinates.lng}/${coordinates.lat}/1`;
-            addPoints(qUrl);
-            let llProps = document.getElementById('ll-props');
-            let llInfo = document.getElementById('ll-info');
-            let closest = document.getElementById('closest');
-            let nearby = document.getElementById('nearby');
-            let properties = document.getElementById('properties');
-            properties.style.display = 'block';
-            while (nearby.firstChild) {
-                nearby.removeChild(nearby.firstChild);
-            }
-            while (closest.firstChild) {
-                closest.removeChild(closest.firstChild);
-            }
-            while (llInfo.firstChild) {
-                llInfo.removeChild(llInfo.firstChild);
-            }
-            while (llProps.firstChild) {
-                llProps.removeChild(llProps.firstChild);
-            }
-            popup.remove();
-            currentClst = null;
-        })
-    })
+    // map.on('click', 'prop-backdrop', (e) => {
+    //     let coordinates = e.lngLat;
+    //     let description = "<u id='here' class='data'>What's here?</u>";
+    //     let popup = new mapboxgl.Popup()
+    //         .setLngLat(coordinates)
+    //         .setHTML(description)
+    //         .addTo(map);
+    //     let here = document.getElementById('here');
+    //     here.addEventListener('click', function () {
+    //         if (currentMarker) {
+    //             currentMarker.remove();
+    //         }
+    //         const qUrl = `${xyUrl}/${coordinates.lng}/${coordinates.lat}/1`;
+    //         addPoints(qUrl);
+    //         let llProps = document.getElementById('ll-props');
+    //         let llInfo = document.getElementById('ll-info');
+    //         let closest = document.getElementById('closest');
+    //         let nearby = document.getElementById('nearby');
+    //         let properties = document.getElementById('properties');
+    //         properties.style.display = 'block';
+    //         while (nearby.firstChild) {
+    //             nearby.removeChild(nearby.firstChild);
+    //         }
+    //         while (closest.firstChild) {
+    //             closest.removeChild(closest.firstChild);
+    //         }
+    //         while (llInfo.firstChild) {
+    //             llInfo.removeChild(llInfo.firstChild);
+    //         }
+    //         while (llProps.firstChild) {
+    //             llProps.removeChild(llProps.firstChild);
+    //         }
+    //         popup.remove();
+    //         currentClst = null;
+    //     })
+    // })
 
 });
