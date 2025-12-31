@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import apiRouter from './src/routes/api.js'; 
 import ejs from 'ejs';
 
 

@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 loadEnvFile()
 
-pg.defaults.ssl = true;
+// pg.defaults.ssl = true;
 
 const { Pool } = pg;
 
