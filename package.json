@@ -3,10 +3,9 @@
   "version": "0.0.1",
   "type": "module",
   "description": "Project of the mapping landlords working group for the mutual aid society of Medford and Somerville",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "backend": "nodemon landlords.js",
-    "start": "node landlords.js",
+    "start": "node app.js",
     "migrate-dev": "db-migrate up -e dev",
     "migrate-prod": "db-migrate up -e prod",
     "create-migration": "db-migrate create"
@@ -21,11 +20,6 @@
     "tenants",
     "organizing"
   ],
-  "nodemonConfig": {
-    "ignore": [
-      "public/*"
-    ]
-  },
   "author": "Eric Robsky Huntley",
   "license": "MIT",
   "dependencies": {
