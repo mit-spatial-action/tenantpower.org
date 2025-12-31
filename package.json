@@ -1,13 +1,12 @@
 {
   "name": "landlords",
   "version": "0.0.1",
+  "type": "module",
   "description": "Project of the mapping landlords working group for the mutual aid society of Medford and Somerville",
   "main": "index.js",
   "scripts": {
     "backend": "nodemon landlords.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel public/views/index.html",
-    "build": "parcel build --public-url . index.html",
+    "start": "node landlords.js",
     "migrate-dev": "db-migrate up -e dev",
     "migrate-prod": "db-migrate up -e prod",
     "create-migration": "db-migrate create"

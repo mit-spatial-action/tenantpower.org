@@ -1,10 +1,17 @@
-const creds = require('./database.json'),
-    fs = require("fs"),
-    path = require('path')
+import fs from 'fs';
+import path from 'path';
+import pg from 'pg';
+import { fileURLToPath } from 'url';
 
-const pg = require('pg')
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const creds_path = path.join(__dirname, 'database.json');
+const creds = JSON.parse(fs.readFileSync(creds_path, 'utf8'));
+
 pg.defaults.ssl = true;
-const Pool = pg.Pool;
+
+const { Pool } = pg;
 
 const pool = new Pool({
     user: creds.dev.user,
@@ -12,14 +19,11 @@ const pool = new Pool({
     database: creds.dev.database,
     password: creds.dev.password,
     port: creds.dev.port,
-    ssl: {
-        rejectUnauthorized: false
-        // ca: fs.readFileSync(path.join(__dirname, 'cert/ca-certificate.crt')).toString()
-    }
+    ssl: creds.dev.ssl
 })
 
 const getPropsByClst = (request, response) => {
-    const clst = parseInt(request.params.clst)
+    const clst = parseInt(request.params.clst, 10);
     const query = `SELECT json_build_object(
         'type', 'FeatureCollection',
         'features', json_agg(ST_AsGeoJSON(t.*)::json)
@@ -29,7 +33,8 @@ const getPropsByClst = (request, response) => {
     ) AS t;`
     pool.query(query, [clst], (error, results) => {
         if (error) {
-            throw error
+            console.error(error);
+            return response.status(500).send('Internal Server Error');
         }
         response.status(200).json(results.rows[0].geojson);
     })
@@ -50,13 +55,14 @@ const getPropsByLoc = (request, response) => {
     WHERE t.d <= 100;`
     pool.query(query, [lng, lat, cnt], (error, results) => {
         if (error) {
-            throw error
+            console.error(error);
+            return response.status(500).send('Internal Server Error');
         }
         response.status(200).json(results.rows[0].geojson);
     })
 }
 
-module.exports = {
+export {
     getPropsByClst,
     getPropsByLoc,
 }
