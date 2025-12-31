@@ -23,17 +23,12 @@
   "author": "Eric Robsky Huntley",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "ejs": "^3.1.3",
-    "express": "^4.17.1",
-    "mapbox-gl": "^1.11.0",
-    "nodemon": "^2.0.6",
-    "pg": "^8.2.1",
-    "regenerator-runtime": "^0.14.1"
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
-    "db-migrate": "^0.11.11",
-    "db-migrate-pg": "^1.2.2",
-    "parcel-bundler": "^1.12.4"
+    "db-migrate": "^0.11.14",
+    "db-migrate-pg": "^1.5.2"
   }
 }
