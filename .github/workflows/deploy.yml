@@ -1,0 +1,40 @@
+name: Deploy Workflow
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy to server
+        run: |
+          ssh ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            # Ensure UV is Installed
+            curl -LsSf https://astral.sh/uv/install.sh | sh &&
+            source $HOME/.local/bin/env &&
+
+            cd ${{ secrets.APP_DIR }} &&
+            git pull origin main &&
+
+            # Sync Dependencies
+            uv sync --frozen &&
+
+            # Restart Services
+            sudo -n systemctl restart gunicorn &&
+            sudo -n systemctl daemon-reload &&
+            sudo -n systemctl restart nginx
+          EOF

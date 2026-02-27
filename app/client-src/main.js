@@ -1,4 +1,22 @@
-$('#disclaimer').modal('show');
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css'; 
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import bbox from '@turf/bbox';
+import centroid from '@turf/centroid';
+import * as bootstrap from 'bootstrap'; 
+import 'bootstrap/dist/css/bootstrap.css';
+import '@fontsource-variable/overpass';
+import '@fontsource-variable/overpass-mono';
+import './styles.css'; 
+
+const disclaimer = new bootstrap.Modal(document.getElementById('disclaimer'));
+const about = new bootstrap.Modal(document.getElementById('about'));
+
+disclaimer.show();
+about.hide();
+
+mapboxgl.accessToken = "pk.eyJ1IjoiZXJpY3JvYnNreWh1bnRsZXkiLCJhIjoiY2tiOGY2YzA3MDNvZDJydWZtanF1NGlvMSJ9.eZomWOA0vV9CM3Uz8OmQVg"
 
 const map = new mapboxgl.Map({
     container: 'map',
@@ -21,7 +39,7 @@ document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 const clstUrl = 'props/clst';
 const xyUrl = 'props/xy';
 
-getResults = async (url) => {
+const getResults = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
     return data;
@@ -32,11 +50,7 @@ let activeProperty = null;
 let currentClst = null;
 let resultState = false;
 
-titleCase = (string) => {
-    return (string.split(' ').map(w => w[0].toUpperCase() + w.substr(1).toLowerCase()).join(' '))
-}
-
-cityName = (abb) => {
+const cityName = (abb) => {
     if (abb == 'som') {
         return ('Somerville, MA');
     } else if (abb == 'cam') {
@@ -50,7 +64,7 @@ cityName = (abb) => {
     }
 }
 
-makeArrowMarker = (p) => {
+const makeArrowMarker = (p) => {
     let latlng = new mapboxgl.LngLat(p.lon, p.lat);
     let el = document.createElement('div');
     el.className = 'marker';
@@ -64,7 +78,7 @@ makeArrowMarker = (p) => {
     currentMarker = new mapboxgl.Marker(el).setLngLat(latlng).addTo(map);
 }
 
-csvFromJSON = (json) => {
+const csvFromJSON = (json) => {
     // null value handler
     const replacer = (key, value) => value === null ? '' : value;
     const header = Object.keys(json[0].properties);
@@ -74,7 +88,7 @@ csvFromJSON = (json) => {
     return csv
 }
 
-listResults = (features) => {
+const listResults = (features) => {
     // let property = document.getElementById('search-results');
     // while (property.firstChild) {
     //     property.removeChild(property.firstChild);
@@ -244,7 +258,7 @@ listResults = (features) => {
     }
 }
 
-listProperties = (cluster) => {
+const listProperties = (cluster) => {
     let first = cluster[0];
     let props = first.properties;
     let ls = document.getElementById('left-sidebar');
@@ -333,7 +347,7 @@ listProperties = (cluster) => {
         this.classList.remove('active');
     })
     buttonInfo.addEventListener('click', function () {
-        $('#about').modal('show');
+        about.show();
     })
     cluster.forEach(function (prop) {
         let p = prop.properties;
@@ -397,7 +411,7 @@ listProperties = (cluster) => {
     })
 }
 
-addPoints = async (url) => {
+const addPoints = async (url) => {
     let geojson = await getResults(url);
     if (geojson.features) {
         if (currentClst) {
@@ -405,14 +419,14 @@ addPoints = async (url) => {
         } else {
             listResults(geojson.features);
         }
-        let bbox = turf.extent(geojson);
+        let extent = bbox(geojson);
         let centroids = {
             type: 'FeatureCollection',
             features: geojson.features.map(function(feat) {
                 return {
                     type: 'Feature',
                     properties: feat.properties,
-                    geometry: turf.centroid(feat).geometry
+                    geometry: centroid(feat).geometry
                 }
             })
         };
@@ -505,7 +519,7 @@ addPoints = async (url) => {
 
         map.on('mouseenter', 'prop-polys', function (e) {
             map.getCanvas().style.cursor = 'pointer';
-            p = e.features[0].properties;
+            let p = e.features[0].properties;
             if (currentMarker) {
                 currentMarker.remove();
             }
@@ -536,7 +550,7 @@ addPoints = async (url) => {
         });
         map.on('mouseenter', 'prop-circle', function (e) {
             map.getCanvas().style.cursor = 'pointer';
-            p = e.features[0].properties;
+            let p = e.features[0].properties;
             if (currentMarker) {
                 currentMarker.remove();
             }
@@ -565,42 +579,42 @@ addPoints = async (url) => {
                 speed: 0.9,
             })
         });
-        map.fitBounds(bbox, { maxZoom: 17 });
+        map.fitBounds(extent, { maxZoom: 17 });
     }
 }
 
 map.on('load', () => {
-    map.addSource('prop-tiles', {
-        type: 'vector',
-        url: 'mapbox://ericrobskyhuntley.904c4kq4'
-    });
-    map.addLayer({
-        'id': 'prop-backdrop',
-        'type': 'circle',
-        'source': 'prop-tiles',
-        'source-layer': 'test-90w35b',
-        'layout': {
-            'circle-sort-key': ['get', 'count']
-        },
-        'paint': {
-            'circle-color': 'white',
-            'circle-blur': 1,
-            'circle-opacity': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                13, 0.3,
-                14, 0.1
-            ],
-            'circle-radius': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                13, 2,
-                22, 20
-            ]
-        }
-    });
+    // map.addSource('prop-tiles', {
+    //     type: 'vector',
+    //     url: 'mapbox://ericrobskyhuntley.904c4kq4'
+    // });
+    // map.addLayer({
+    //     'id': 'prop-backdrop',
+    //     'type': 'circle',
+    //     'source': 'prop-tiles',
+    //     'source-layer': 'test-90w35b',
+    //     'layout': {
+    //         'circle-sort-key': ['get', 'count']
+    //     },
+    //     'paint': {
+    //         'circle-color': 'white',
+    //         'circle-blur': 1,
+    //         'circle-opacity': [
+    //             'interpolate',
+    //             ['linear'],
+    //             ['zoom'],
+    //             13, 0.3,
+    //             14, 0.1
+    //         ],
+    //         'circle-radius': [
+    //             'interpolate',
+    //             ['linear'],
+    //             ['zoom'],
+    //             13, 2,
+    //             22, 20
+    //         ]
+    //     }
+    // });
     geocoder.on('result', function (e) {
         let ls = document.getElementById('left-sidebar');
         ls.style.display = 'block';
@@ -656,48 +670,48 @@ map.on('load', () => {
         }
     });
 
-    map.on('mouseover', 'prop-backdrop', function (e) {
-        map.getCanvas().style.cursor = 'pointer';
-    });
-    map.on('mouseleave', 'prop-backdrop', function () {
-        map.getCanvas().style.cursor = '';
-    });
+    // map.on('mouseover', 'prop-backdrop', function (e) {
+    //     map.getCanvas().style.cursor = 'pointer';
+    // });
+    // map.on('mouseleave', 'prop-backdrop', function () {
+    //     map.getCanvas().style.cursor = '';
+    // });
 
-    map.on('click', 'prop-backdrop', (e) => {
-        let coordinates = e.lngLat;
-        let description = "<u id='here' class='data'>What's here?</u>";
-        let popup = new mapboxgl.Popup()
-            .setLngLat(coordinates)
-            .setHTML(description)
-            .addTo(map);
-        let here = document.getElementById('here');
-        here.addEventListener('click', function () {
-            if (currentMarker) {
-                currentMarker.remove();
-            }
-            const qUrl = `${xyUrl}/${coordinates.lng}/${coordinates.lat}/1`;
-            addPoints(qUrl);
-            let llProps = document.getElementById('ll-props');
-            let llInfo = document.getElementById('ll-info');
-            let closest = document.getElementById('closest');
-            let nearby = document.getElementById('nearby');
-            let properties = document.getElementById('properties');
-            properties.style.display = 'block';
-            while (nearby.firstChild) {
-                nearby.removeChild(nearby.firstChild);
-            }
-            while (closest.firstChild) {
-                closest.removeChild(closest.firstChild);
-            }
-            while (llInfo.firstChild) {
-                llInfo.removeChild(llInfo.firstChild);
-            }
-            while (llProps.firstChild) {
-                llProps.removeChild(llProps.firstChild);
-            }
-            popup.remove();
-            currentClst = null;
-        })
-    })
+    // map.on('click', 'prop-backdrop', (e) => {
+    //     let coordinates = e.lngLat;
+    //     let description = "<u id='here' class='data'>What's here?</u>";
+    //     let popup = new mapboxgl.Popup()
+    //         .setLngLat(coordinates)
+    //         .setHTML(description)
+    //         .addTo(map);
+    //     let here = document.getElementById('here');
+    //     here.addEventListener('click', function () {
+    //         if (currentMarker) {
+    //             currentMarker.remove();
+    //         }
+    //         const qUrl = `${xyUrl}/${coordinates.lng}/${coordinates.lat}/1`;
+    //         addPoints(qUrl);
+    //         let llProps = document.getElementById('ll-props');
+    //         let llInfo = document.getElementById('ll-info');
+    //         let closest = document.getElementById('closest');
+    //         let nearby = document.getElementById('nearby');
+    //         let properties = document.getElementById('properties');
+    //         properties.style.display = 'block';
+    //         while (nearby.firstChild) {
+    //             nearby.removeChild(nearby.firstChild);
+    //         }
+    //         while (closest.firstChild) {
+    //             closest.removeChild(closest.firstChild);
+    //         }
+    //         while (llInfo.firstChild) {
+    //             llInfo.removeChild(llInfo.firstChild);
+    //         }
+    //         while (llProps.firstChild) {
+    //             llProps.removeChild(llProps.firstChild);
+    //         }
+    //         popup.remove();
+    //         currentClst = null;
+    //     })
+    // })
 
 });

@@ -1,9 +1,8 @@
 .cache/
 cert/
 node_modules/
-creds.js
 logfile
-public/js/env.js
 .env
-database.json
-props.sql
+
+__pycache__/
+.venv/
