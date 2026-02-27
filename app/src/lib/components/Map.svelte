@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import mapboxgl from 'mapbox-gl';
     import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
     import { onMount, onDestroy } from 'svelte';
@@ -8,16 +8,22 @@
 
     import { PUBLIC_MB_TOKEN } from '$env/static/public';
 
-    let map;
-    let mapContainer;
-    let lng, lat, zoom, style;
+    let map: mapboxgl.Map | undefined;
+    let mapContainer: HTMLDivElement;
 
-    lng = -71.224518;
-    lat = 42.213995;
-    zoom = 9;
-    style = "mapbox://styles/mit-spatial-action/cmd4tea3k009701s25hl6hr5y";
+    interface MapState {
+        lng: number;
+        lat: number;
+        zoom: number;
+        style: string;
+    };
 
-    let initialState = { lng, lat, zoom, style };
+     const initialState: MapState = { 
+        lng: -71.224518, 
+        lat: 42.213995, 
+        zoom: 9, 
+        style: "mapbox://styles/mit-spatial-action/cmd4tea3k009701s25hl6hr5y" 
+    };
 
     onMount(() => {
         map = new mapboxgl.Map({
@@ -32,7 +38,7 @@
             new MapboxGeocoder({
                 accessToken: PUBLIC_MB_TOKEN,
                 useBrowserFocus: true,
-                mapboxgl: mapboxgl
+                mapboxgl: mapboxgl as any
             })
         );
     });

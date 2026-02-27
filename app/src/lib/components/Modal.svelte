@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { fade, fly } from 'svelte/transition';
     let { title = null, children } = $props();
     let active = $state(true);
