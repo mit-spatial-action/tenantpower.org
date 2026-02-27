@@ -3,3 +3,6 @@ cert/
 node_modules/
 logfile
 .env
+
+__pycache__/
+.venv/
