@@ -699,6 +699,7 @@ dependencies = [
     { name = "asyncpg" },
     { name = "fastapi", extra = ["standard"] },
     { name = "gunicorn" },
+    { name = "uvicorn" },
     { name = "uvicorn-worker" },
 ]
 
@@ -707,6 +708,7 @@ requires-dist = [
     { name = "asyncpg", specifier = ">=0.31.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.133.1" },
     { name = "gunicorn", specifier = ">=25.1.0" },
+    { name = "uvicorn", specifier = ">=0.41.0" },
     { name = "uvicorn-worker", specifier = ">=0.4.0" },
 ]
 
