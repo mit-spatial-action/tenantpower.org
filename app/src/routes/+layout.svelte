@@ -1,6 +1,6 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-
+    import 'mapbox-gl/dist/mapbox-gl.css';
 	let { children } = $props();
 </script>
 
@@ -9,3 +9,10 @@
 </svelte:head>
 
 {@render children()}
+
+<style>
+  :global(body) {
+    margin: 0;
+    padding: 0;
+  }
+</style>
