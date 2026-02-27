@@ -1,6 +1,7 @@
 import os
 import json
-from fastapi import FastAPI, Response, Path
+from typing import Annotated
+from fastapi import FastAPI, Response, Path, Query
 import asyncpg
 
 app = FastAPI()
@@ -9,7 +10,7 @@ DB_CONFIG=f"postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASS")}@{os.geten
 
 @app.get("/props/{id}")
 async def get_props(
-    id: int = Path(..., title="The ID of the cluster to filter by")
+    id: Annotated[int, Path(title="The ID of the cluster to filter by")]
 ):
     conn = await asyncpg.connect(DB_CONFIG)
     try:
@@ -43,28 +44,30 @@ async def get_props(
 
 @app.get("/props_by_loc/")
 async def get_props_by_loc(
-    id: int = Path(..., title="The ID of the cluster to filter by")
+    lat: Annotated[float, Query(gt=-90, lt=90)],
+    lng: Annotated[float, Query(gt=-180, lt=180)],
+    n: Annotated[int, Query(gt=0)]
 ):
     conn = await asyncpg.connect(DB_CONFIG)
     try:
         query = """
             SELECT jsonb_build_object(
                 'type', 'FeatureCollection',
-                'features', json_agg(ST_AsGeoJSON(t.*)::json)
-                ) AS geojson
+                'features', jsonb_agg(ST_AsGeoJSON(t.*)::jsonb)
+            )
             FROM ( 
-                SELECT 
-                    *, 
-                    st_distance(
-                        ST_Transform(geometry, 2249), 
-                        ST_Transform(
-                            ST_SetSRID(ST_Point($1, $2), 4326), 2249)
-                        ) as d
-                FROM props AS p
-                ORDER BY ST_Transform(geometry, 2249) <-> ST_Transform(ST_SetSRID(ST_Point($1, $2), 4326), 2249) LIMIT $3) AS t
-            WHERE t.d <= 100;
+                SELECT *
+                FROM props
+                WHERE ST_DWithin(
+                    ST_Transform(geometry, 2249),
+                    ST_Transform(ST_SetSRID(ST_Point($1, $2), 4326), 2249),
+                    100
+                )
+                ORDER BY ST_Transform(geometry, 2249) <-> ST_Transform(ST_SetSRID(ST_Point($1, $2), 4326), 2249)
+                LIMIT $3
+            ) AS t;
         """
-        result = await conn.fetchval(query, lat, lng, n)
+        result = await conn.fetchval(query, lng, lat, n)
         if not result:
             return {"type": "FeatureCollection", "features": []}
         
