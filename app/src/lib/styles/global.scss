@@ -1,0 +1,7 @@
+$red: #FF0000;
+
+@use "bulma/sass" with (
+  $family-primary: "'Overpass Variable', sans-serif",
+  $family-mono: "'Overpass Mono Variable', monospace",
+  $primary: $red
+);
