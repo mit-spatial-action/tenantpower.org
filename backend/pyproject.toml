@@ -8,4 +8,5 @@ dependencies = [
     "asyncpg>=0.31.0",
     "fastapi[standard]>=0.133.1",
     "gunicorn>=25.1.0",
+    "uvicorn>=0.41.0",
 ]

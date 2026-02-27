@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import FastAPI, Response, Path, Query
 import asyncpg
 
-app = FastAPI()
+app = FastAPI(root_path="/tenantpower")
 
 DB_CONFIG=f"postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASS")}@{os.getenv("DB_HOST")}:{os.getenv("DB_PORT")}/{os.getenv("DB_NAME")}"
 
