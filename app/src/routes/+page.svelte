@@ -21,15 +21,13 @@
         <a href="http://gis.vgsi.com/SomervilleMA/Search.aspx">Somerville</a>, 
         <a href="http://gis.vgsi.com/medfordma/">Medford</a>, and
         <a href="http://apps.brooklinema.gov/assessors/propertylookup.asp">Brookline</a>, Massachusetts
-        to identify additional properties that are likely owned by your landlord. We're able to make pretty 
-        good guesses! But this data can only tell us so much---we encourage you to check 
+        to identify institutional owners, and the proprties they own, using machine learning. It was able to make pretty good guesses! But we encourage you to check 
         <a href="http://www.masslandrecords.com/">Massachusetts Land Records</a>
         and/or the assessors databases linked above to confirm ownership.
     </div>
     <div class="block">
-        Tenant Power was a collaboration between the
-        <a href="https://mutualaidmamas.com/">Mutual Aid Medford and Somerville (MAMAS)</a> 
-        Housing Justice Working Group and <a href="">Eric Robsky Huntley</a> of the <a href="">MIT Spatial Action & Analysis Research Group</a>.
+        <a href="https://ericrobskyhuntley.github.io">Eric Robsky Huntley</a> of the <a href="mit-spatial-action.github.io">MIT Spatial Action & Analysis Research Group</a> built Tenant Power as part of the
+        <a href="https://mutualaidmamas.com/">Mutual Aid Medford and Somerville (MAMAS)</a> Housing Justice Working Group.
     </div>
 </Modal>
 <Map/>
