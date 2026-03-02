@@ -20,7 +20,7 @@
 
     const bounds = new mapboxgl.LngLatBounds(
         [-71.1912506475513, 42.22791953938691], 
-        [-70.86884578454921, 42.45345337436338]
+        [-70.98634143082624, 42.45345337436338]
     )
     const boundsNorm = mapboxgl.LngLatBounds.convert(bounds);
 
