@@ -2,9 +2,13 @@
     import Map from "$lib/components/Map.svelte";
     import ModalCard from "$lib/components/ModalCard.svelte";
     import Modal from "$lib/components/Modal.svelte";
+    import Spinner from "$lib/components/Spinner.svelte";
     let infoModal = $state(true);
 </script>
 
+{#if !infoModal}
+    <Spinner/>
+{/if}
 <Modal bind:active={infoModal}>
     {#snippet children(close: () => void)}
     <ModalCard title="Tenant Power" onclose={close}>
