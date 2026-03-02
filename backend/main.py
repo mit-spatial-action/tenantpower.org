@@ -8,8 +8,8 @@ app = FastAPI(root_path="/tenantpower")
 
 DB_CONFIG=f"postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASS")}@{os.getenv("DB_HOST")}:{os.getenv("DB_PORT")}/{os.getenv("DB_NAME")}"
 
-@app.get("/props/{id}")
-async def get_props(
+@app.get("/clusters/{id}")
+async def get_clusters(
     id: Annotated[int, Path(title="The ID of the cluster to filter by")]
 ):
     conn = await asyncpg.connect(DB_CONFIG)
@@ -42,22 +42,59 @@ async def get_props(
     finally:
         await conn.close()
 
+@app.get("/props/{id}")
+async def get_props(
+    id: Annotated[int, Path(title="The ID of the property.")],
+    bare: Annotated[bool, Query()]
+):
+    conn = await asyncpg.connect(DB_CONFIG)
+    cols = "id, clst, geometry" if bare else "*"
+    try:
+        query = f"""
+            SELECT jsonb_build_object(
+                'type', 'FeatureCollection',
+                'features', jsonb_agg(features)
+            )
+            FROM (
+                SELECT jsonb_build_object(
+                    'type',       'Feature',
+                    'id',         id,
+                    'geometry',   ST_AsGeoJSON(geometry)::jsonb,
+                    'properties', to_jsonb(row) - 'geometry'
+                ) AS feature
+                FROM (
+                    SELECT {cols} FROM props 
+                    WHERE id = $1 
+                    ORDER BY clst ASC
+                ) row
+            ) features;
+        """
+        result = await conn.fetchval(query, id)
+        if not result:
+            return {"type": "FeatureCollection", "features": []}
+        
+        return Response(content=result, media_type="application/json")
+    
+    finally:
+        await conn.close()
+
 @app.get("/props_by_loc/")
 async def get_props_by_loc(
     lat: Annotated[float, Query(gt=-90, lt=90)],
     lng: Annotated[float, Query(gt=-180, lt=180)],
-    n: Annotated[int, Query(gt=0)]
+    n: Annotated[int, Query(gt=0)],
+    bare: Annotated[bool, Query()]
 ):
     conn = await asyncpg.connect(DB_CONFIG)
+    cols = "id, clst, geometry" if bare else "*"
     try:
-        query = """
+        query = f"""
             SELECT jsonb_build_object(
                 'type', 'FeatureCollection',
                 'features', jsonb_agg(ST_AsGeoJSON(t.*)::jsonb)
             )
             FROM ( 
-                SELECT *
-                FROM props
+                SELECT {cols} FROM props
                 WHERE ST_DWithin(
                     ST_Transform(geometry, 2249),
                     ST_Transform(ST_SetSRID(ST_Point($1, $2), 4326), 2249),
