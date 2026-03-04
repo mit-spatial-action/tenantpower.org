@@ -15,7 +15,7 @@
         "npm:@fontsource-variable/overpass@^5.2.8",
         "npm:@mapbox/mapbox-gl-geocoder@^5.1.2",
         "npm:@sveltejs/adapter-netlify@^6.0.4",
-        "npm:@sveltejs/kit@^2.50.2",
+        "npm:@sveltejs/kit@^2.53.4",
         "npm:@sveltejs/vite-plugin-svelte@^6.2.4",
         "npm:@types/mapbox__mapbox-gl-geocoder@^5.1.1",
         "npm:bulma@^1.0.4",
@@ -24,9 +24,11 @@
         "npm:sass@^1.97.3",
         "npm:svelte-check@^4.3.6",
         "npm:svelte-loading-spinners@~0.3.6",
-        "npm:svelte@^5.51.0",
+        "npm:svelte-seo@2",
+        "npm:svelte@^5.53.6",
         "npm:typescript@^5.9.3",
-        "npm:vite@^7.3.1"
+        "npm:vite@^7.3.1",
+        "npm:zod@^4.3.6"
       ]
     }
   }

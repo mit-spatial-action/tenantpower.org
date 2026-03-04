@@ -5,6 +5,7 @@
   import SvelteSeo from "svelte-seo";
   import "@fontsource-variable/overpass";
   import "@fontsource-variable/overpass-mono";
+  import Map from "$lib/components/Map.svelte";
   import type { Config } from "$lib/schemas/instance";
 
   import { config } from "$lib/config";
@@ -48,6 +49,7 @@
   }}
 />
 
+<Map/>
 {@render children()}
 
 <style>
