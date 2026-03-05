@@ -2,7 +2,7 @@
 
 ## Setting Up a Local Environment
 
-You'll need a `.env` file containing connection string parameters and keys for authentication (see [`.env.example`](https://github.com/mit-spatial-action/tenantpower/blob/main/dedupe/.env.example)).
+You'll need a `.env` file containing connection string parameters and keys for authentication (see [`.env.example`](https://github.com/mit-spatial-action/tenantpower/blob/main/pipelines/dedupe/.env.example)).
 
 ```sh
 DB_USER=
