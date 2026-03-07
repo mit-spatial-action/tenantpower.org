@@ -1,13 +1,15 @@
 <script lang="ts">
     import mapboxgl from "mapbox-gl";
     import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+    import type { Feature, FeatureCollection } from 'geojson';
     import { onMount, onDestroy } from "svelte";
-
+    
     import "mapbox-gl/dist/mapbox-gl.css";
     import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
     import { PUBLIC_MB_TOKEN } from '$env/static/public';
     import { appState } from '$lib/state.svelte';
+    import { goto } from "$app/navigation";
 
     let map: mapboxgl.Map | undefined;
     let mapContainer: HTMLDivElement;
@@ -106,10 +108,20 @@
 
             geocoder.on("result", async (e) => {
                 appState.loading = true;
-                console.log(e);
                 const coords = e.result.geometry.coordinates;
-                const results = await fetch(`props_by_loc/${coords[0]}/${coords[1]}/1`);
+                const response = await fetch(`props_by_loc/${coords[0]}/${coords[1]}/1`);
                 appState.loading = false;
+                const results: FeatureCollection = await response.json();
+                if (results.features && results.features.length > 0) {
+                    const selected = results.features.filter(f => {
+                        return f.properties?.prop_addr?.split(' ')[0] === e.result.address;
+                    })
+                    if (selected.length > 0) {
+                        goto('prop/' + selected[0].properties?.id);
+                    } else {
+                        appState.loading = false;
+                    }
+                }
             });
         });
 
