@@ -105,10 +105,11 @@
             }
 
             geocoder.on("result", async (e) => {
+                appState.loading = true;
+                console.log(e);
                 const coords = e.result.geometry.coordinates;
-                const apiUrl = "props_by_loc";
-                const query = `${apiUrl}/${coords[0]}/${coords[1]}/1`;
-                console.log(await fetch(query));
+                const results = await fetch(`props_by_loc/${coords[0]}/${coords[1]}/1`);
+                appState.loading = false;
             });
         });
 
