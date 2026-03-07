@@ -1,5 +1,5 @@
 <script lang="ts">
-  import favicon from "$lib/assets/favicon.ico";
+  import favicon from "$lib/assets/favicon.png";
   import favicon32 from "$lib/assets/favicon_32x32.png";
   import favicon192 from "$lib/assets/favicon_192x192.png";
   import SvelteSeo from "svelte-seo";
@@ -28,7 +28,7 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href={favicon} type="image/x-icon" sizes="16x16" />
+  <link rel="icon" href={favicon} type="image/png" sizes="16x16" />
   <link rel="icon" href={favicon32} type="image/png" sizes="32x32" />
   <link rel="icon" href={favicon192} type="image/png" sizes="192x192" />
   <link rel="apple-touch-icon" href={favicon192} sizes="192x192" />
