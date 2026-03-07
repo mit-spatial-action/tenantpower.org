@@ -6,8 +6,8 @@
     import "mapbox-gl/dist/mapbox-gl.css";
     import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
-    import { PUBLIC_MB_TOKEN } from "$env/static/public";
-    import { appState } from "$lib/state.svelte";
+    import { PUBLIC_MB_TOKEN } from '$env/static/public';
+    import { appState } from '$lib/state.svelte';
 
     let map: mapboxgl.Map | undefined;
     let mapContainer: HTMLDivElement;
@@ -71,6 +71,8 @@
             types: "address",
             countries: "us",
             bbox: bbox,
+            flyTo: false,
+            marker: false,
             filter: (item) => {
                 return item.context.some((i) => {
                     return (
@@ -84,13 +86,12 @@
         map.addControl(geocoder, "top-left");
 
         map.on("load", () => {
-            map &&
+            if (map) {
                 map.addSource("bounds-source", {
                     type: "geojson",
                     data: "/data/bounds.geojson",
                 });
 
-            map &&
                 map.addLayer({
                     id: "bounds",
                     type: "line",
@@ -101,14 +102,13 @@
                         "line-blur": 0.5,
                     },
                 });
+            }
 
             geocoder.on("result", async (e) => {
                 const coords = e.result.geometry.coordinates;
-                const apiUrl = "api/props_by_loc/";
-                const query = `${apiUrl}?lng=${coords[0]}&lat=${coords[1]}&n=1`;
-                let results = await fetch(query);
-                let test = await results.text();
-                console.log(test);
+                const apiUrl = "props_by_loc";
+                const query = `${apiUrl}/${coords[0]}/${coords[1]}/1`;
+                console.log(await fetch(query));
             });
         });
 
