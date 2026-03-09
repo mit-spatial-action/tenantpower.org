@@ -34,9 +34,9 @@
         boundsArray[1][0],
         boundsArray[1][1],
     ];
-    const xMargin = Math.abs(boundsNorm.getWest() - boundsNorm.getEast()) * 0.2;
+    const xMargin = Math.abs(boundsNorm.getWest() - boundsNorm.getEast()) * 0.5;
     const yMargin =
-        Math.abs(boundsNorm.getNorth() - boundsNorm.getSouth()) * 0.2;
+        Math.abs(boundsNorm.getNorth() - boundsNorm.getSouth()) * 0.5;
 
     const initialState: MapState = {
         zoom: 9,
@@ -61,7 +61,7 @@
                 ],
             ),
             maxZoom: 21,
-            minZoom: 11,
+            minZoom: 8,
             pitchWithRotate: false,
             dragRotate: false,
         });
@@ -103,7 +103,64 @@
                         "line-width": 2,
                         "line-blur": 0.5,
                     },
+                    slot: 'middle'
                 });
+
+                map.addSource("parcels-source", {
+                    type: "vector",
+                    url: "mapbox://mit-spatial-action.79vtaci2",
+                });
+
+                map.addLayer({
+                    id: "parcel-points",
+                    type: "circle",
+                    source: "parcels-source",
+                    "source-layer": "tenantpower-cz585a",
+                    paint: {
+                        'circle-color': 'white',
+                        'circle-stroke-color': 'red',
+                        'circle-stroke-width': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            13, 0,
+                            22, 3
+                        ],
+                        'circle-opacity': 1,
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            13, 0.5,
+                            22, 10
+                        ]
+                    },
+                    slot: 'middle'
+                });
+
+                map.addInteraction('parcel-points-mouseenter', {
+                    type: 'mouseenter',
+                    target: { layerId: 'parcel-points' },
+                    handler: () => {
+                        if (map) map.getCanvas().style.cursor = (map.getZoom() > 15) ? 'pointer' : '';
+                    }
+                });
+                map.addInteraction('parcel-points-mouseleave', {
+                    type: 'mouseleave',
+                    target: { layerId: 'parcel-points' },
+                    handler: () => {
+                        if (map) map.getCanvas().style.cursor = '';
+                    }
+                });
+
+                map.addInteraction('parcel-points-click', {
+                    type: 'click',
+                    target: { layerId: 'parcel-points' },
+                    handler: (e) => {
+                        if (map) (map.getZoom() > 15) && goto(`/prop/${e.feature?.properties.id}`);
+                    }
+                });
+
             }
 
             geocoder.on("result", async (e) => {
