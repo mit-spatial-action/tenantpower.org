@@ -2,7 +2,7 @@
     import mapboxgl from "mapbox-gl";
     import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
     import type { FeatureCollection } from 'geojson';
-    import type { GeoJSONSource } from 'mapbox-gl';
+    import type { EasingOptions, GeoJSONSource } from 'mapbox-gl';
     import { onMount, onDestroy } from "svelte";
     
     import "mapbox-gl/dist/mapbox-gl.css";
@@ -45,20 +45,31 @@
         bounds: bounds,
     };
 
+    const updateMapSource = (map: mapboxgl.Map, sourceId: string, data: any) => {
+        const update = () => {
+            const source = map.getSource(sourceId) as GeoJSONSource;
+            source?.setData(data);
+        };
+
+        if (map.isStyleLoaded()) {
+            update();
+        } else {
+            map.once('style.load', update);
+        }
+    }
+
     $effect(() => {
-        const data = appState.selected as FeatureCollection;
-        if (map && data && map.isStyleLoaded()) {
-            map?.flyTo({
+        const data = appState.selected as FeatureCollection | null;
+        if (data) {
+            const flyOps = {
                 center: [
                     data.features[0].properties?.lon,
                     data.features[0].properties?.lat
                 ],
                 zoom: 18
-            })
-            const source = map.getSource('parcels-fill-source') as GeoJSONSource;
-            if (source) {
-                source.setData(data);
-            }
+            } as EasingOptions
+            map && map.flyTo(flyOps)
+            map && updateMapSource(map, 'parcels-fill-source', appState.selected);
         }
     });
 
@@ -171,31 +182,14 @@
                     }
                 });
 
-                map.addLayer({
-                    id: "parcel-points",
-                    type: "circle",
-                    source: "parcels-points-source",
-                    "source-layer": "tenantpower-cz585a",
+                map.addLayer({ 
+                    id: 'parcels-stroke', 
+                    type: 'line', 
+                    source: 'parcels-fill-source',
                     paint: {
-                        'circle-color': 'white',
-                        'circle-stroke-color': 'red',
-                        'circle-stroke-width': [
-                            'interpolate',
-                            ['linear'],
-                            ['zoom'],
-                            13, 0,
-                            22, 3
-                        ],
-                        'circle-opacity': 1,
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'],
-                            ['zoom'],
-                            13, 0.5,
-                            22, 10
-                        ]
-                    },
-                    slot: 'middle'
+                        'line-color': 'white',
+                        'line-width': 3
+                    }
                 });
 
                 map.addInteraction('parcel-points-mouseenter', {
@@ -226,7 +220,7 @@
             geocoder.on("result", async (e) => {
                 appState.loading = true;
                 const coords = e.result.geometry.coordinates;
-                const response = await fetch(`props_by_loc/${coords[0]}/${coords[1]}/1`);
+                const response = await fetch(`/props_by_loc/${coords[0]}/${coords[1]}/1`);
                 appState.loading = false;
                 const results: FeatureCollection = await response.json();
                 if (results.features && results.features.length > 0) {
@@ -234,7 +228,7 @@
                         return f.properties?.prop_addr?.split(' ')[0] === e.result.address;
                     })
                     if (selected.length > 0) {
-                        goto('prop/' + selected[0].properties?.id);
+                        goto('/prop/' + selected[0].properties?.id);
                     } else {
                         appState.loading = false;
                     }

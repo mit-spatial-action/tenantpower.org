@@ -1,13 +1,29 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
     import { appState } from '$lib/state.svelte';
-    import { fly } from 'svelte/transition'
+    import { fly } from 'svelte/transition';
+    import { navigating } from '$app/state';
+    import Spinner from '$lib/components/Spinner.svelte';
+    import type { FeatureCollection } from 'geojson';
 
 	let { data }: PageProps = $props();
-    let prop = $state(data.features[0].properties)
+
+    interface ParcelProperties {
+        ass_val: number | null;
+        prop_addr: string;
+        year: number;
+        clst: number;
+        town: string;
+        lon: number;
+        lat: number;
+        [key: string]: any;
+    }
+    
     $effect(() => {
-		appState.selected = data;
+		appState.selected = data as FeatureCollection;
 	});
+    const prop = $derived(data?.features[0]?.properties ?? null);
+
     const USDollar = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -25,6 +41,11 @@
     }
 </script>
 
+{#if navigating}
+    <Spinner/>
+{/if}
+
+{#if prop}
 <div transition:fly={{ x: -200, duration: 200 }} class="box mx-2 mt-2">
     <div class="block has-background-primary p-3">
         <h1 class="title has-text-white">{prop.prop_addr}</h1>
@@ -77,3 +98,4 @@
         </p>
     </div>
 </div>
+{/if}

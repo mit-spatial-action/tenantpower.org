@@ -3,7 +3,7 @@ import { API_KEY } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
     const { id } = params;
-    const response = await fetch(`/api/clusters/${id}`, {
+    const response = await fetch(`/api/v1/clusters/${id}`, {
         headers: {
             'X-API-Key': `${API_KEY}`
         }
