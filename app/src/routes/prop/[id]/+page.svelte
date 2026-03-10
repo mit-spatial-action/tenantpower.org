@@ -13,12 +13,22 @@
         currency: 'USD',
         maximumFractionDigits: 0,
     });
+    const muniExpand = (abb:string): string => {
+        const towns: Record<string, string> = {
+            som: "Somerville",
+            bos: "Boston",
+            med: "Medford",
+            brk: "Brookline",
+            cam: "Cambridge"
+        };
+        return `${towns[abb] ?? "unknown"}, MA`
+    }
 </script>
 
 <div transition:fly={{ x: -200, duration: 200 }} class="box mx-2 mt-2">
     <div class="block has-background-primary p-3">
         <h1 class="title has-text-white">{prop.prop_addr}</h1>
-        <h2 class="subtitle has-text-white">{prop.town}</h2>
+        <h2 class="subtitle has-text-white">{muniExpand(prop.town)}</h2>
     </div>
     <div class="block">
         <div class="field is-grouped is-grouped-multiline">
