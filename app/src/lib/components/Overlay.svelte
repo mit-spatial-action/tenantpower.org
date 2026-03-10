@@ -2,19 +2,20 @@
     let { children } = $props();
 </script>
 <section class="overlay">
-    <div class="columns">
+    <div class="columns mt-6">
         <div class="column is-one-third">
-            <div class="box m-2">
-                {@render children?.()}
-            </div>
+            {@render children?.()}
         </div>
     </div>
 </section>
 <style>
     .overlay {
         position: absolute;
-        padding: 0;
-        margin: 0;
         width: 100%;
+        pointer-events: none; 
+    }
+    .columns > * {
+        pointer-events: auto; /* Re-enables clicking for the actual menu content */
+        height: 100%;
     }
 </style>
