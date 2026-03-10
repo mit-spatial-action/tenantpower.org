@@ -46,18 +46,17 @@
     };
 
     $effect(() => {
-        const data = $state.snapshot(appState.selected) as FeatureCollection;
+        const data = appState.selected as FeatureCollection;
         if (map && data && map.isStyleLoaded()) {
-            // map?.flyTo({
-            //     center: [
-            //         data.features[0].properties?.lon,
-            //         data.features[0].properties?.lat
-            //     ],
-            //     zoom: 18
-            // })
+            map?.flyTo({
+                center: [
+                    data.features[0].properties?.lon,
+                    data.features[0].properties?.lat
+                ],
+                zoom: 18
+            })
             const source = map.getSource('parcels-fill-source') as GeoJSONSource;
             if (source) {
-                console.log(data);
                 source.setData(data);
             }
         }
@@ -125,7 +124,7 @@
                     slot: 'middle'
                 });
 
-                map.addSource("parcels-source", {
+                map.addSource("parcels-points-source", {
                     type: "vector",
                     url: "mapbox://mit-spatial-action.79vtaci2",
                 });
@@ -133,7 +132,49 @@
                 map.addLayer({
                     id: "parcel-points",
                     type: "circle",
-                    source: "parcels-source",
+                    source: "parcels-points-source",
+                    "source-layer": "tenantpower-cz585a",
+                    paint: {
+                        'circle-color': 'white',
+                        'circle-stroke-color': 'red',
+                        'circle-stroke-width': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            13, 0,
+                            22, 3
+                        ],
+                        'circle-opacity': 1,
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            13, 0.5,
+                            22, 10
+                        ]
+                    },
+                    slot: 'middle'
+                });
+
+                map.addSource("parcels-fill-source", {
+                    type: "geojson",
+                    data: { type: 'FeatureCollection', features: [] },
+                });
+
+                map.addLayer({ 
+                    id: 'parcels-fill', 
+                    type: 'fill', 
+                    source: 'parcels-fill-source',
+                    paint: {
+                        'fill-color': 'red',
+                        'fill-opacity': 1.0
+                    }
+                });
+
+                map.addLayer({
+                    id: "parcel-points",
+                    type: "circle",
+                    source: "parcels-points-source",
                     "source-layer": "tenantpower-cz585a",
                     paint: {
                         'circle-color': 'white',
