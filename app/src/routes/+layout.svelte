@@ -67,7 +67,7 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button is-primary is-medium is-responsive" href="/about/">About</a>
+            <a class="button is-primary is-normal is-responsive" href="/about/">About</a>
           </div>
         </div>
       </div>
