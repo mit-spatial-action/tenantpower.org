@@ -11,6 +11,7 @@
     import { PUBLIC_MB_TOKEN } from '$env/static/public';
     import { appState } from '$lib/state.svelte';
     import { goto } from "$app/navigation";
+    import { bbox } from '@turf/bbox'
 
     let map: mapboxgl.Map | undefined;
     let mapContainer: HTMLDivElement;
@@ -29,7 +30,7 @@
 
     const boundsArray = boundsNorm.toArray();
 
-    const bbox: [number, number, number, number] = [
+    const initBbox: [number, number, number, number] = [
         boundsArray[0][0],
         boundsArray[0][1],
         boundsArray[1][0],
@@ -61,15 +62,14 @@
     $effect(() => {
         const data = appState.selected as FeatureCollection | null;
         if (data) {
-            const flyOps = {
-                center: [
-                    data.features[0].properties?.lon,
-                    data.features[0].properties?.lat
-                ],
-                zoom: 18
-            } as EasingOptions
-            map && map.flyTo(flyOps)
+            const extent = bbox(data) as mapboxgl.LngLatBoundsLike;
             map && updateMapSource(map, 'parcels-fill-source', appState.selected);
+            map && map.fitBounds(extent, {
+                padding: 50,
+                maxZoom: 18,
+                duration: 500,
+                essential: true
+            });
         }
     });
 
@@ -101,7 +101,7 @@
             mapboxgl: mapboxgl as any,
             types: "address",
             countries: "us",
-            bbox: bbox,
+            bbox: initBbox,
             flyTo: false,
             marker: false,
             filter: (item) => {
@@ -240,7 +240,7 @@
                 const selected = features.find(f => 
                     f.properties?.prop_addr?.split(' ')[0] === e.result.address
                 );
-                
+
                 if (!selected) {
                     appState.errors.geocode = true;
                     return;

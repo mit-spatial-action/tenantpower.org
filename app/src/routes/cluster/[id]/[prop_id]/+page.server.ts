@@ -14,13 +14,14 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     const results = await response.json() as FeatureCollection;
 
     return {
-        "cluster": {
-            type: "FeatureCollection",
-            features: results.features.filter((r) => String(r.id) !== prop_id)
-        },
-        "prop": {
-            type: "FeatureCollection",
-            features: results.features.filter((r) => String(r.id) === prop_id)
-        }
+        type: "FeatureCollection",
+        features: results.features.map((feature) => ({
+            ...feature,
+            properties: {
+                ...feature.properties,
+                selected: String(feature.id) === prop_id
+            }
+        }))
+        .sort((a, b) => +b.properties.selected - +a.properties.selected)
     };
 };
