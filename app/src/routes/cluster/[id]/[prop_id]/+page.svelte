@@ -1,14 +1,15 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
     import { appState } from '$lib/state.svelte';
     import PropertyCard from '$lib/components/PropertyCard.svelte';
-    import type { FeatureCollection } from 'geojson';
+	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
-
+    
     $effect(() => {
-		appState.selected = data as FeatureCollection;
+        if (data.prop) {
+            appState.selected = data.prop;
+        }
 	});
 </script>
 
-<PropertyCard feature={data.features[0]} />
+<PropertyCard feature={data.prop.features[0]} />

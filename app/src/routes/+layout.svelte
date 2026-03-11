@@ -83,7 +83,7 @@
     padding: 0;
   }
 
-  :global(.bordered) {
+  :global(.bordered, .mapboxgl-ctrl-geocoder) {
     border-bottom: 0.25rem solid red;
     border-right: 0.25rem solid red;
   }
