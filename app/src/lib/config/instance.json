@@ -1,0 +1,18 @@
+{
+  "title": "Tenant Power",
+  "description": "Archived tool empowering tenants to take on their landlords in Greater Boston.",
+  "canonical": "https://tenantpower.ographiesresearch.com",
+  "keywords": ["landlords", "property", "housing", "rent", "ownership", "Somerville", "Medford", "Boston", "Cambridge", "Brookline"],
+  "images": [{
+        "url": "opengraph_rect.png",
+        "width": 1200,
+        "height": 630,
+        "alt": "Tenant Power Logotype"
+      },
+      {
+        "url": "opengraph_square.png",
+        "width": 1200,
+        "height": 1200,
+        "alt": "Tenant Power Square Logotype"
+    }]
+}

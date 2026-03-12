@@ -1,31 +1,19 @@
-# sv
+# Tenant Power App
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+The archival Tenant Power tool is a [Svelte](https://github.com/sveltejs/svelte)/[SvelteKit](https://github.com/sveltejs/kit) application [deployed on Netlify](https://tenantpower.netlify.app/). The original tool was built using vanilla HTML/JS/CSS. I ported to a modern web framework for ease of archiving and maintenance.
 
-## Creating a project
+## Setting Up a Development Environment
 
-If you're seeing this, you've probably already done this step. Congrats!
+The application relies heavily on [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js), which requires a token. It also needs to a pass an authentication credential to the [backend](https://github.com/mit-spatial-action/tenantpower.org/tree/main/backend). These should be stored in a .env file as follows (see also [.env.example](https://github.com/mit-spatial-action/tenantpower.org/tree/main/app/.env.example)):
 
 ```sh
-# create a new project
-npx sv create my-app
+PUBLIC_MB_TOKEN=
+API_KEY=
 ```
 
-To recreate this project with the same configuration:
+Once you've installed dependencies with `npm install`, start a development server:
 
 ```sh
-# recreate this project
-npx sv create --template minimal --types ts --install npm .
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
 npm run dev -- --open
 ```
 
@@ -38,5 +26,3 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
