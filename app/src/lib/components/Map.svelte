@@ -3,6 +3,7 @@
     import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
     import type { FeatureCollection } from "geojson";
     import { onMount, onDestroy } from "svelte";
+    import { browser } from '$app/environment';
 
     import "mapbox-gl/dist/mapbox-gl.css";
     import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
@@ -14,6 +15,8 @@
 
     let map: mapboxgl.Map | undefined;
     let mapContainer: HTMLDivElement;
+
+    let isMobile = $state(false); 
 
     interface MapState {
         zoom: number;
@@ -64,6 +67,12 @@
 
     $effect(() => {
         const data = appState.selected as FeatureCollection | null;
+
+        const mql = window.matchMedia('(max-width: 768px)');
+        isMobile = mql.matches;
+        const handler = (e: MediaQueryListEvent) => (isMobile = e.matches);
+        mql.addEventListener('change', handler);
+
         if (data) {
             const centerPoints = {
                 type: "FeatureCollection",
@@ -81,12 +90,18 @@
             map && updateMapSource(map, "parcels-circle-source", centerPoints);
             map &&
                 map.fitBounds(extent, {
-                    padding: 100,
+                    padding: {
+                        bottom: 100,
+                        left: isMobile ? 100 : 700,
+                        right: 100,
+                        top: 100
+                    },
                     maxZoom: 18,
                     duration: 500,
                     essential: true,
                 });
         }
+        return () => mql.removeEventListener('change', handler)
     });
 
     onMount(() => {
@@ -343,10 +358,6 @@
                 goto(`/prop/${selected.properties?.id}`);
             });
         });
-    });
-
-    onDestroy(() => {
-        if (map) map.remove();
     });
 </script>
 
