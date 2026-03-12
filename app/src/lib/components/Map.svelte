@@ -3,7 +3,6 @@
     import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
     import type { FeatureCollection } from "geojson";
     import { onMount, onDestroy } from "svelte";
-    import { browser } from '$app/environment';
 
     import "mapbox-gl/dist/mapbox-gl.css";
     import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
@@ -358,6 +357,10 @@
                 goto(`/prop/${selected.properties?.id}`);
             });
         });
+    });
+
+    onDestroy(() => {
+        if (map) map.remove();
     });
 </script>
 
